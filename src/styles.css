@@ -144,5 +144,19 @@ body {
 .bin.now { margin-top: 6px; color: var(--ink); opacity: 0.85; }
 .bin .chg { color: var(--accent); font-weight: 700; }
 
+.plaque { margin-top: 40px; }
+.plaque h2 { margin: 0 0 6px; font-size: 22px; }
+.plaque .sub { margin: 0 0 16px; max-width: 70ch; color: var(--muted); }
+.plaque figure { margin: 0; }
+.plaque img {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+.plaque figcaption { margin-top: 8px; color: var(--muted); font-size: 12px; }
+
 .foot { margin-top: 28px; color: var(--muted); font-size: 12px; }
 .foot a, .head a { color: var(--accent); }

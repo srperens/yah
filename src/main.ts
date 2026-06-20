@@ -1,5 +1,6 @@
 import './styles.css';
 import data from './data/pulsars.json';
+import plaqueUrl from './assets/pioneer-plaque.svg';
 
 interface Pulsar {
   n: number;
@@ -89,6 +90,17 @@ app.innerHTML = `
     </div>
     <aside id="panel" class="panel"><p class="hint">Tap a pulsar.</p></aside>
   </div>
+
+  <section class="plaque">
+    <h2>The real thing</h2>
+    <p class="sub">The actual Pioneer plaque (NASA, 1972). The starburst of lines on the left —
+    radiating from a point between the human figures and the Sun — is the very pulsar map
+    decoded above. The long horizontal line points to the galactic centre.</p>
+    <figure>
+      <img src="${plaqueUrl}" alt="The Pioneer plaque engraving" loading="lazy" />
+      <figcaption>Pioneer plaque, NASA — public domain, via Wikimedia Commons.</figcaption>
+    </figure>
+  </section>
 
   <footer class="foot">
     Data: <a href="https://www.johnstonsarchive.net/astro/pulsarmap.html" target="_blank" rel="noopener">johnstonsarchive</a>
