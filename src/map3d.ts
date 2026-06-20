@@ -12,6 +12,7 @@ export interface Pulsar3D {
   l: number;
   b: number;
   distancePc: number;
+  periodNowSec: number;
 }
 
 // Galactic spherical (l, b, distance) -> Cartesian, Sun at the origin.
@@ -29,6 +30,15 @@ function toCartesian(p: Pulsar3D, scale: number): THREE.Vector3 {
 const ACCENT = 0x7fd4ff;
 const GOLD = 0xf5d67b;
 const DIM = 0x6d79a8;
+const BRIGHT_COOL = 0xdff2ff;
+const BRIGHT_GOLD = 0xfff4d0;
+
+// Real pulsar periods span 33 ms – 3.7 s; the fast ones would flicker invisibly.
+// Compress (sqrt) into a visible 0.4–4 s band that still preserves the ordering,
+// so each pulsar visibly blinks at its own pace.
+function displayPeriod(realSec: number): number {
+  return 1.4 * Math.sqrt(realSec / 0.5);
+}
 
 export interface Scene3D {
   setSelected(n: number | null): void;
@@ -70,38 +80,52 @@ export function createScene(
   scene.add(makeLine(new THREE.Vector3(0, 0, 0), gc, 0x3a4570));
   scene.add(makeLabel('galactic centre', gc, 'gc'));
 
-  // Sun.
+  const glowTex = makeGlowTexture();
+
+  // Sun: a small bright sphere with a steady (non-pulsing) glow.
   const sun = new THREE.Mesh(
-    new THREE.SphereGeometry(2.4, 24, 24),
+    new THREE.SphereGeometry(1.2, 24, 24),
     new THREE.MeshBasicMaterial({ color: GOLD }),
   );
   scene.add(sun);
+  const sunGlow = makeGlow(glowTex, GOLD, 0.45);
+  sunGlow.scale.setScalar(7);
+  scene.add(sunGlow);
   scene.add(makeLabel('Sun', new THREE.Vector3(0, 0, 0), 'sun'));
 
-  // Pulsars: a node sphere + a spoke from the Sun, each tagged with its pulsar n.
-  const nodes: { n: number; mesh: THREE.Mesh; line: THREE.Line; pos: THREE.Vector3 }[] = [];
+  // Pulsars: a small node sphere + a pulsing glow + a spoke from the Sun.
+  interface Node {
+    n: number;
+    mesh: THREE.Mesh;
+    glow: THREE.Sprite;
+    line: THREE.Line;
+    dispPeriod: number;
+  }
+  const nodes: Node[] = [];
   for (const p of pulsars) {
     const pos = toCartesian(p, SCALE);
     const mesh = new THREE.Mesh(
-      new THREE.SphereGeometry(1.6, 18, 18),
+      new THREE.SphereGeometry(0.8, 16, 16),
       new THREE.MeshBasicMaterial({ color: DIM }),
     );
     mesh.position.copy(pos);
     mesh.userData.n = p.n;
     scene.add(mesh);
+    const glow = makeGlow(glowTex, BRIGHT_COOL, 0.12);
+    glow.position.copy(pos);
+    scene.add(glow);
     const line = makeLine(new THREE.Vector3(0, 0, 0), pos, 0x39426b);
     scene.add(line);
     scene.add(makeLabel(p.alias ?? p.psr, pos, 'pl', p.n));
-    nodes.push({ n: p.n, mesh, line, pos });
+    nodes.push({ n: p.n, mesh, glow, line, dispPeriod: displayPeriod(p.periodNowSec) });
   }
 
   let selected: number | null = null;
   function applySelection(): void {
     for (const nd of nodes) {
-      const sel = nd.n === selected;
-      (nd.mesh.material as THREE.MeshBasicMaterial).color.setHex(sel ? GOLD : DIM);
-      nd.mesh.scale.setScalar(sel ? 1.8 : 1);
-      (nd.line.material as THREE.LineBasicMaterial).color.setHex(sel ? ACCENT : 0x39426b);
+      (nd.line.material as THREE.LineBasicMaterial).color.setHex(
+        nd.n === selected ? ACCENT : 0x39426b,
+      );
     }
     for (const el of host.querySelectorAll<HTMLElement>('.label3d.pl')) {
       el.classList.toggle('sel', Number(el.dataset.n) === selected);
@@ -138,10 +162,34 @@ export function createScene(
   const ro = new ResizeObserver(resize);
   ro.observe(host);
 
+  // Pulse animation: a sharp Gaussian flash once per (display) rotation, like a
+  // real pulsar's narrow beam sweeping past.
+  const clock = new THREE.Clock();
+  const cDim = new THREE.Color(DIM);
+  const cCool = new THREE.Color(BRIGHT_COOL);
+  const cGold = new THREE.Color(GOLD);
+  const cGoldB = new THREE.Color(BRIGHT_GOLD);
+  const tmp = new THREE.Color();
+  const SIGMA = 0.06;
+
   let running = true;
   function loop(): void {
     if (!running) return;
     requestAnimationFrame(loop);
+    const t = clock.getElapsedTime();
+    for (const nd of nodes) {
+      const phase = (t / nd.dispPeriod) % 1;
+      const d = Math.min(phase, 1 - phase); // distance to the flash at phase 0
+      const pulse = Math.exp(-(d * d) / (2 * SIGMA * SIGMA));
+      const sel = nd.n === selected;
+      tmp.copy(sel ? cGold : cDim).lerp(sel ? cGoldB : cCool, pulse);
+      (nd.mesh.material as THREE.MeshBasicMaterial).color.copy(tmp);
+      nd.mesh.scale.setScalar((sel ? 1.7 : 1) * (0.9 + 0.5 * pulse));
+      const gm = nd.glow.material as THREE.SpriteMaterial;
+      gm.opacity = (sel ? 0.22 : 0.1) + 0.6 * pulse;
+      gm.color.copy(tmp);
+      nd.glow.scale.setScalar((sel ? 7 : 4.5) * (0.9 + 0.6 * pulse));
+    }
     controls.update();
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
@@ -168,6 +216,32 @@ export function createScene(
 function makeLine(a: THREE.Vector3, b: THREE.Vector3, color: number): THREE.Line {
   const geom = new THREE.BufferGeometry().setFromPoints([a, b]);
   return new THREE.Line(geom, new THREE.LineBasicMaterial({ color }));
+}
+
+function makeGlow(tex: THREE.Texture, color: number, opacity: number): THREE.Sprite {
+  const mat = new THREE.SpriteMaterial({
+    map: tex,
+    color,
+    transparent: true,
+    opacity,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  return new THREE.Sprite(mat);
+}
+
+function makeGlowTexture(): THREE.CanvasTexture {
+  const s = 128;
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = s;
+  const ctx = cv.getContext('2d')!;
+  const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  g.addColorStop(0, 'rgba(255,255,255,1)');
+  g.addColorStop(0.2, 'rgba(255,255,255,0.6)');
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, s, s);
+  return new THREE.CanvasTexture(cv);
 }
 
 function makeLabel(text: string, pos: THREE.Vector3, cls: string, n?: number): CSS2DObject {
