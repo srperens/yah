@@ -1,6 +1,7 @@
 import './styles.css';
 import data from './data/pulsars.json';
 import plaqueUrl from './assets/pioneer-plaque.svg';
+import { mountPlaque } from './plaque';
 
 interface Pulsar {
   n: number;
@@ -19,6 +20,7 @@ const MAP_EPOCH = data.mapEpochYear; // ~1969.7
 const PULSARS = data.pulsars as Pulsar[];
 const SECONDS_PER_YEAR = 365.25 * 86400;
 const NOW_YEAR = 2026;
+const LY_PER_PC = 3.261564;
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const SIZE = 1000;
@@ -91,16 +93,7 @@ app.innerHTML = `
     <aside id="panel" class="panel"><p class="hint">Tap a pulsar.</p></aside>
   </div>
 
-  <section class="plaque">
-    <h2>The real thing</h2>
-    <p class="sub">The actual Pioneer plaque (NASA, 1972). The starburst of lines on the left —
-    radiating from a point between the human figures and the Sun — is the very pulsar map
-    decoded above. The long horizontal line points to the galactic centre.</p>
-    <figure>
-      <img src="${plaqueUrl}" alt="The Pioneer plaque engraving" loading="lazy" />
-      <figcaption>Pioneer plaque, NASA — public domain, via Wikimedia Commons.</figcaption>
-    </figure>
-  </section>
+  <section class="plaque" id="plaque"></section>
 
   <footer class="foot">
     Data: <a href="https://www.johnstonsarchive.net/astro/pulsarmap.html" target="_blank" rel="noopener">johnstonsarchive</a>
@@ -209,7 +202,7 @@ function renderPanel(): void {
       <dt>Spin-down (Ṗ)</dt><dd>${p.pdot!.toExponential(3)} s/s</dd>
       <dt>Drift since the map</dt><dd>${driftPpm >= 0 ? '+' : ''}${driftPpm.toFixed(driftPpm < 100 ? 2 : 0)} ppm</dd>
       <dt>Direction (galactic l, b)</dt><dd>${p.l.toFixed(2)}°, ${p.b.toFixed(2)}°</dd>
-      <dt>Distance</dt><dd>${p.distancePc.toLocaleString()} pc</dd>
+      <dt>Distance</dt><dd>${p.distancePc.toLocaleString()} pc = ${Math.round(p.distancePc * LY_PER_PC).toLocaleString()} ly</dd>
     </dl>
     <div class="binwrap">
       <div class="binlabel">Binary period (× hydrogen line) — map vs. when found:</div>
@@ -285,3 +278,4 @@ toggle.addEventListener('click', async () => {
 
 renderMap();
 renderRecover();
+mountPlaque(document.getElementById('plaque')!, plaqueUrl);
