@@ -1,5 +1,7 @@
 # You Are Here (YAH)
 
+**▶ Live: https://srperens.github.io/yah/**
+
 An interactive decode of the **pulsar map** — the diagram Frank Drake designed for
 the Pioneer plaques (1972/73) and reused on the Voyager golden-record covers (1977).
 
@@ -34,6 +36,7 @@ map. Period derivatives (for the planned time-travel slider) will be added from 
 ## Status
 
 - [x] Static pulsar map: spokes, directions, distances, per-pulsar binary period
-- [ ] Period derivatives (Ṗ) from ATNF
-- [ ] "Year found" time slider — recompute periods via spin-down, show the timestamp working
-- [ ] Binary ticks rendered along every spoke (not just the selected one)
+- [x] Binary ticks rendered along every spoke
+- [x] Period derivatives (Ṗ) baked into the data
+- [x] "Year found" time slider — recompute periods via spin-down, recover the map's timestamp
+- [ ] Barycentric / proper-motion drift of the directions over long timescales

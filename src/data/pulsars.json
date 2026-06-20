@@ -1,21 +1,21 @@
 {
   "hydrogenPeriodSec": 7.04024183647e-10,
   "mapEpochYear": 1969.7,
-  "note": "Periods, galactic coordinates and distances from johnstonsarchive.net decode of the Pioneer/Voyager pulsar map. pdot (s/s) to be filled from the ATNF Pulsar Catalogue for the time-slider feature.",
+  "note": "Periods, galactic coordinates, distances and period derivatives (pdot, s/s) from the johnstonsarchive.net decode of the Pioneer/Voyager pulsar map (its Table 3 lists pdot in units of 1e-15 s/s, applied here as s/s).",
   "pulsars": [
-    { "n": 1,  "psr": "J1731-4744", "alias": null,        "periodMapSec": 0.829683, "periodNowSec": 0.829829, "l": 342.57, "b": -7.67, "distancePc": 4980, "pdot": null },
-    { "n": 2,  "psr": "J1456-6843", "alias": null,        "periodMapSec": 0.263377, "periodNowSec": 0.263376, "l": 313.87, "b": -8.54, "distancePc": 458,  "pdot": null },
-    { "n": 3,  "psr": "J1243-6423", "alias": null,        "periodMapSec": 0.388000, "periodNowSec": 0.388481, "l": 302.05, "b": -1.53, "distancePc": 7400, "pdot": null },
-    { "n": 4,  "psr": "J0835-4510", "alias": "Vela",      "periodMapSec": 0.089219, "periodNowSec": 0.089330, "l": 263.55, "b": -2.79, "distancePc": 722,  "pdot": null },
-    { "n": 5,  "psr": "J0953+0755", "alias": "B0950+08",  "periodMapSec": 0.253065, "periodNowSec": 0.253065, "l": 228.91, "b": 43.70, "distancePc": 8440, "pdot": null },
-    { "n": 6,  "psr": "J0826+2637", "alias": "B0823+26",  "periodMapSec": 0.530660, "periodNowSec": 0.530661, "l": 196.96, "b": 31.74, "distancePc": 375,  "pdot": null },
-    { "n": 7,  "psr": "J0534+2200", "alias": "Crab",      "periodMapSec": 0.033130, "periodNowSec": 0.033522, "l": 184.56, "b": -5.78, "distancePc": 2490, "pdot": null },
-    { "n": 8,  "psr": "J0528+2200", "alias": "B0525+21",  "periodMapSec": 3.745491, "periodNowSec": 3.745497, "l": 183.86, "b": -6.90, "distancePc": 2270, "pdot": null },
-    { "n": 9,  "psr": "J0332+5434", "alias": "B0329+54",  "periodMapSec": 0.714519, "periodNowSec": 0.714519, "l": 145.00, "b": -1.22, "distancePc": 1430, "pdot": null },
-    { "n": 10, "psr": "J2219+4754", "alias": null,        "periodMapSec": 0.538467, "periodNowSec": 0.538469, "l": 98.38,  "b": -7.60, "distancePc": 2450, "pdot": null },
-    { "n": 11, "psr": "J2018+2839", "alias": null,        "periodMapSec": 0.557953, "periodNowSec": 0.557953, "l": 68.10,  "b": -3.98, "distancePc": 1100, "pdot": null },
-    { "n": 12, "psr": "J1935+1616", "alias": null,        "periodMapSec": 0.358736, "periodNowSec": 0.358736, "l": 52.44,  "b": -2.09, "distancePc": 7940, "pdot": null },
-    { "n": 13, "psr": "J1932+1059", "alias": "B1929+10",  "periodMapSec": 0.226517, "periodNowSec": 0.226518, "l": 47.38,  "b": -3.88, "distancePc": 169,  "pdot": null },
-    { "n": 14, "psr": "J1645-0317", "alias": null,        "periodMapSec": 0.387689, "periodNowSec": 0.387689, "l": 14.11,  "b": 26.06, "distancePc": 2900, "pdot": null }
+    { "n": 1,  "psr": "J1731-4744", "alias": null,        "periodMapSec": 0.829683, "periodNowSec": 0.829829, "l": 342.57, "b": -7.67, "distancePc": 4980, "pdot": 1.63626e-13 },
+    { "n": 2,  "psr": "J1456-6843", "alias": null,        "periodMapSec": 0.263377, "periodNowSec": 0.263376, "l": 313.87, "b": -8.54, "distancePc": 458,  "pdot": 1.013e-16 },
+    { "n": 3,  "psr": "J1243-6423", "alias": null,        "periodMapSec": 0.388000, "periodNowSec": 0.388481, "l": 302.05, "b": -1.53, "distancePc": 7400, "pdot": 4.4997e-15 },
+    { "n": 4,  "psr": "J0835-4510", "alias": "Vela",      "periodMapSec": 0.089219, "periodNowSec": 0.089330, "l": 263.55, "b": -2.79, "distancePc": 722,  "pdot": 1.2488e-13 },
+    { "n": 5,  "psr": "J0953+0755", "alias": "B0950+08",  "periodMapSec": 0.253065, "periodNowSec": 0.253065, "l": 228.91, "b": 43.70, "distancePc": 8440, "pdot": 2.2915e-16 },
+    { "n": 6,  "psr": "J0826+2637", "alias": "B0823+26",  "periodMapSec": 0.530660, "periodNowSec": 0.530661, "l": 196.96, "b": 31.74, "distancePc": 375,  "pdot": 1.7094e-15 },
+    { "n": 7,  "psr": "J0534+2200", "alias": "Crab",      "periodMapSec": 0.033130, "periodNowSec": 0.033522, "l": 184.56, "b": -5.78, "distancePc": 2490, "pdot": 4.205188e-13 },
+    { "n": 8,  "psr": "J0528+2200", "alias": "B0525+21",  "periodMapSec": 3.745491, "periodNowSec": 3.745497, "l": 183.86, "b": -6.90, "distancePc": 2270, "pdot": 4.0046e-14 },
+    { "n": 9,  "psr": "J0332+5434", "alias": "B0329+54",  "periodMapSec": 0.714519, "periodNowSec": 0.714519, "l": 145.00, "b": -1.22, "distancePc": 1430, "pdot": 2.04959e-15 },
+    { "n": 10, "psr": "J2219+4754", "alias": null,        "periodMapSec": 0.538467, "periodNowSec": 0.538469, "l": 98.38,  "b": -7.60, "distancePc": 2450, "pdot": 2.76503e-15 },
+    { "n": 11, "psr": "J2018+2839", "alias": null,        "periodMapSec": 0.557953, "periodNowSec": 0.557953, "l": 68.10,  "b": -3.98, "distancePc": 1100, "pdot": 1.4936e-16 },
+    { "n": 12, "psr": "J1935+1616", "alias": null,        "periodMapSec": 0.358736, "periodNowSec": 0.358736, "l": 52.44,  "b": -2.09, "distancePc": 7940, "pdot": 6.00354e-15 },
+    { "n": 13, "psr": "J1932+1059", "alias": "B1929+10",  "periodMapSec": 0.226517, "periodNowSec": 0.226518, "l": 47.38,  "b": -3.88, "distancePc": 169,  "pdot": 1.15661e-15 },
+    { "n": 14, "psr": "J1645-0317", "alias": null,        "periodMapSec": 0.387689, "periodNowSec": 0.387689, "l": 14.11,  "b": 26.06, "distancePc": 2900, "pdot": 1.781e-15 }
   ]
 }

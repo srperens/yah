@@ -24,6 +24,20 @@ body {
 }
 .head .sub { margin: 0; max-width: 70ch; color: var(--muted); }
 
+.timebar {
+  margin-top: 22px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(127, 212, 255, 0.12);
+  border-radius: 14px;
+}
+.timerow { display: flex; align-items: baseline; gap: 10px; }
+.timerow label { color: var(--muted); font-size: 13px; }
+.timerow output { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--gold); }
+#year { width: 100%; margin: 12px 0 6px; accent-color: var(--accent); }
+.recover { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+.recover b { color: var(--ink); }
+
 .stage {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -43,6 +57,7 @@ body {
 }
 
 .spoke { stroke: #39426b; stroke-width: 1.4; }
+.hit { stroke: transparent; stroke-width: 30; pointer-events: stroke; }
 .ray { cursor: pointer; }
 .ray .node { fill: #6d79a8; transition: fill 0.15s; }
 .ray .plabel {
@@ -55,7 +70,9 @@ body {
 .ray:hover .node, .ray.sel .node { fill: var(--accent); }
 .ray:hover .plabel, .ray.sel .plabel { fill: var(--ink); }
 .ray:hover .spoke, .ray.sel .spoke { stroke: var(--accent); stroke-width: 2; }
-.ray.sel .bit { stroke: var(--gold); stroke-width: 2.4; stroke-linecap: round; }
+.bit { stroke: #475080; stroke-width: 1.4; stroke-linecap: round; }
+.ray:hover .bit { stroke: #6f7cb8; }
+.ray.sel .bit { stroke: var(--gold); stroke-width: 2.4; }
 
 .galcentre { stroke: #394066; stroke-width: 1.4; stroke-dasharray: 2 6; }
 .gclabel { fill: var(--muted); font-size: 12px; }
@@ -89,6 +106,9 @@ body {
   border-radius: 8px;
   line-height: 1.7;
 }
+
+.bin.now { margin-top: 6px; color: var(--ink); opacity: 0.85; }
+.bin .chg { color: var(--accent); font-weight: 700; }
 
 .foot { margin-top: 28px; color: var(--muted); font-size: 12px; }
 .foot a, .head a { color: var(--accent); }
