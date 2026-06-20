@@ -39,4 +39,5 @@ map. Period derivatives (for the planned time-travel slider) will be added from 
 - [x] Binary ticks rendered along every spoke
 - [x] Period derivatives (Ṗ) baked into the data
 - [x] "Year found" time slider — recompute periods via spin-down, recover the map's timestamp
+- [x] 3D view (Three.js, lazy-loaded): real galactic positions, orbit / zoom / pan
 - [ ] Barycentric / proper-motion drift of the directions over long timescales

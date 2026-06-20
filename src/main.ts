@@ -82,8 +82,12 @@ app.innerHTML = `
   </section>
 
   <div class="stage">
-    <svg id="map" viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="Pulsar map"></svg>
-    <aside id="panel" class="panel"><p class="hint">Tap a pulsar line.</p></aside>
+    <div class="viewport">
+      <svg id="map" viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="Pulsar map"></svg>
+      <div id="scene" class="scene hidden"></div>
+      <button id="viewtoggle" class="viewtoggle" title="Switch view">3D</button>
+    </div>
+    <aside id="panel" class="panel"><p class="hint">Tap a pulsar.</p></aside>
   </div>
 
   <footer class="foot">
@@ -142,11 +146,7 @@ function renderMap(): void {
     label.textContent = p.alias ?? p.psr;
     g.appendChild(label);
 
-    g.addEventListener('click', () => {
-      selected = p;
-      renderMap();
-      renderPanel();
-    });
+    g.addEventListener('click', () => select(p.n));
     map.appendChild(g);
   }
 
@@ -236,9 +236,39 @@ function renderRecover(): void {
 
 yearInput.addEventListener('input', () => {
   foundYear = sliderToYear(Number(yearInput.value));
-  renderMap();
+  if (mode === '2d') renderMap();
   renderRecover();
   if (selected) renderPanel();
+});
+
+// --- shared selection (works from either view) ---
+function select(n: number): void {
+  selected = PULSARS.find((p) => p.n === n) ?? null;
+  if (mode === '2d') renderMap();
+  scene?.setSelected(selected?.n ?? null);
+  renderPanel();
+}
+
+// --- 2D / 3D view toggle (Three.js is loaded lazily on first 3D use) ---
+type Scene3D = { setSelected(n: number | null): void; resize(): void };
+let mode: '2d' | '3d' = '2d';
+let scene: Scene3D | null = null;
+const sceneHost = document.getElementById('scene')!;
+const toggle = document.getElementById('viewtoggle') as HTMLButtonElement;
+
+toggle.addEventListener('click', async () => {
+  mode = mode === '2d' ? '3d' : '2d';
+  toggle.textContent = mode === '2d' ? '3D' : '2D';
+  map.classList.toggle('hidden', mode === '3d');
+  sceneHost.classList.toggle('hidden', mode === '2d');
+  if (mode === '3d') {
+    if (!scene) {
+      const { createScene } = await import('./map3d');
+      scene = createScene(sceneHost, PULSARS, select);
+    }
+    scene.setSelected(selected?.n ?? null);
+    scene.resize();
+  }
 });
 
 renderMap();
