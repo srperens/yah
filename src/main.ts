@@ -26,13 +26,9 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 const SIZE = 1000;
 const CX = SIZE / 2;
 const CY = SIZE / 2;
-const R_MAX = 440;
-// Plaque style: every binary digit takes the same length along the line, so a
-// line's length follows its period's digit count (not distance). Spacing
-// compresses only if a (future, slowed) period needs more digits than fit.
-const BIT_LEN = 11;
-const SPOKE_START = 30; // gap from the Sun to the first digit
-const SPOKE_END = 16; // gap from the last digit to the node
+const R_MIN = 90;
+const R_MAX = 430;
+const MAX_DIST = Math.max(...PULSARS.map((p) => p.distancePc));
 
 // A pulsar's period at a given calendar year: spin-down adds pdot per second
 // elapsed since the epoch at which the map's period was frozen (~1969.7).
@@ -46,15 +42,10 @@ function periodToBinary(periodSec: number): string {
   return Math.round(periodSec / HYDROGEN).toString(2);
 }
 
-// Geometry of one spoke: direction from galactic longitude, length from the
-// number of binary digits in the (current) period — like the real plaque.
-function spoke(p: Pulsar): { a: number; bits: string; step: number; x: number; y: number } {
+function project(p: Pulsar): { x: number; y: number; a: number; r: number } {
   const a = (p.l * Math.PI) / 180;
-  const bits = periodToBinary(periodAt(p, foundYear));
-  const n = Math.max(bits.length - 1, 1);
-  const step = Math.min(BIT_LEN, (R_MAX - SPOKE_START - SPOKE_END) / n);
-  const r = SPOKE_START + step * n + SPOKE_END;
-  return { a, bits, step, x: CX + r * Math.cos(a), y: CY - r * Math.sin(a) };
+  const r = R_MIN + (R_MAX - R_MIN) * Math.sqrt(p.distancePc / MAX_DIST);
+  return { x: CX + r * Math.cos(a), y: CY - r * Math.sin(a), a, r };
 }
 
 function svg<K extends keyof SVGElementTagNameMap>(
@@ -146,7 +137,7 @@ function renderMap(): void {
   map.appendChild(gcLabel);
 
   for (const p of PULSARS) {
-    const { x, y } = spoke(p);
+    const { x, y } = project(p);
     const isSel = selected?.n === p.n;
 
     const g = svg('g', { class: `ray${isSel ? ' sel' : ''}` });
@@ -168,16 +159,20 @@ function renderMap(): void {
 }
 
 function appendBinaryTicks(g: SVGGElement, p: Pulsar): void {
-  const { a, bits, step } = spoke(p);
+  const { a, r } = project(p);
+  const bits = periodToBinary(periodAt(p, foundYear));
   const ux = Math.cos(a);
   const uy = -Math.sin(a);
   const px = -uy;
   const py = ux;
+  const start = 28;
+  const span = r - start - 16;
+  const step = span / Math.max(bits.length - 1, 1);
   for (let i = 0; i < bits.length; i++) {
-    const d = SPOKE_START + step * i;
+    const d = start + step * i;
     const bx = CX + ux * d;
     const by = CY + uy * d;
-    const len = bits[i] === '1' ? 8 : 3;
+    const len = bits[i] === '1' ? 10 : 3.5;
     g.appendChild(
       svg('line', {
         x1: bx - px * len,

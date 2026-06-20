@@ -6,11 +6,10 @@ An interactive decode of the **pulsar map** — the diagram Frank Drake designed
 the Pioneer plaques (1972/73) and reused on the Voyager golden-record covers (1977).
 
 Fourteen lines radiate from the Sun toward fourteen pulsars. Each line's **direction**
-gives the pulsar's direction, and the **binary tick marks** along it encode that pulsar's
-spin period in units of the hydrogen-line period (7.04024183647 × 10⁻¹⁰ s) — every digit
-taking the same length, so (as on the plaque) the line is as long as its number. Together
-the directions and periods pin the Sun's location in the galaxy, and because pulsars slow
-down at a known rate, the periods also act as a timestamp.
+gives the pulsar's direction, its **length** the relative distance, and the **binary tick
+marks** along it encode that pulsar's spin period in units of the hydrogen-line period
+(7.04024183647 × 10⁻¹⁰ s). Together they pin the Sun's location in the galaxy — and,
+because pulsars slow down at a known rate, the periods also act as a timestamp.
 
 This is a static, offline-capable web app: pure HTML/CSS/TS, no backend.
 
